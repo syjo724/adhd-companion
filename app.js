@@ -98,6 +98,8 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   btn.textContent = 'Signing out…'; btn.disabled = true;
   signedOut = true;
   await sb.auth.signOut();
+  // Force-clear any persisted Supabase session from localStorage
+  Object.keys(localStorage).filter(k => k.startsWith('sb-')).forEach(k => localStorage.removeItem(k));
   btn.textContent = 'Sign out'; btn.disabled = false;
   currentUser = null;
   state = { logs: [], habitLog: {}, customHabits: [], customFoods: [], favFoods: [], customQuotes: [], books: [] };
