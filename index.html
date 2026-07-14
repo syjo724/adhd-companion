@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ADHD Companion" />
+  <meta name="theme-color" content="#5a8a6a" />
+  <title>Anrei's ADHD Journey</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══ App Header ══ -->
+<header class="app-header">
+  <div class="app-title">Anrei's <span>ADHD Journey</span></div>
+</header>
+
+<!-- ══ Daily Quote Bar ══ -->
+<div id="quote-bar" class="quote-bar">
+  <div class="quote-bar-text" id="quote-bar-text"></div>
+  <div class="quote-bar-attr" id="quote-bar-attr"></div>
+  <button class="quote-dismiss" id="quote-dismiss" title="Dismiss for today">×</button>
+</div>
+
+<!-- ══ Tab Bar ══ -->
+<nav class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" data-page="page-log">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    Log
+  </button>
+  <button class="tab-btn" data-page="page-food">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/>
+      <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
+    </svg>
+    Food
+  </button>
+  <button class="tab-btn" data-page="page-habits">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 11 12 14 22 4"/>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+    Habits
+  </button>
+  <button class="tab-btn" data-page="page-quotes">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    Quotes
+  </button>
+  <button class="tab-btn" data-page="page-history">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    History
+  </button>
+</nav>
+
+<!-- ══ Pages ══ -->
+
+<!-- LOG -->
+<main id="page-log" class="page page-offset active">
+  <div class="today-banner">
+    <div class="greeting">Good day 👋</div>
+    <div class="date-str" id="log-banner-date"></div>
+    <div class="log-prompt">How are you feeling today?</div>
+  </div>
+
+  <div id="log-already-done" style="display:none">
+    <div class="card">
+      <div class="card-title">Today's Observation</div>
+      <div id="today-review"></div>
+    </div>
+  </div>
+
+  <div id="log-form-wrap">
+    <div class="card">
+      <div class="card-title">Time of Day</div>
+      <div class="segment">
+        <button class="seg-btn active" data-group="period" data-val="Morning">Morning</button>
+        <button class="seg-btn" data-group="period" data-val="Afternoon">Afternoon</button>
+        <button class="seg-btn" data-group="period" data-val="Evening">Evening</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">How are you feeling?</div>
+      <div class="scale-group">
+        <div class="scale-header">
+          <span class="scale-label">😊 Mood</span>
+          <span class="scale-value" id="scale-mood-val">5</span>
+        </div>
+        <input type="range" id="scale-mood" class="scale-range" min="1" max="10" value="5" />
+        <div class="scale-ticks"><span>Low</span><span>High</span></div>
+      </div>
+      <div class="scale-group">
+        <div class="scale-header">
+          <span class="scale-label">🎯 Focus / Concentration</span>
+          <span class="scale-value" id="scale-focus-val">5</span>
+        </div>
+        <input type="range" id="scale-focus" class="scale-range" min="1" max="10" value="5" />
+        <div class="scale-ticks"><span>Scattered</span><span>Sharp</span></div>
+      </div>
+      <div class="scale-group" style="margin-bottom:0">
+        <div class="scale-header">
+          <span class="scale-label">⚡ Energy</span>
+          <span class="scale-value" id="scale-energy-val">5</span>
+        </div>
+        <input type="range" id="scale-energy" class="scale-range" min="1" max="10" value="5" />
+        <div class="scale-ticks"><span>Drained</span><span>High</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Side Effects (select any)</div>
+      <div class="segment">
+        <button class="seg-btn" data-group="side-effects">Appetite loss</button>
+        <button class="seg-btn" data-group="side-effects">Trouble sleeping</button>
+        <button class="seg-btn" data-group="side-effects">Anxiety</button>
+        <button class="seg-btn" data-group="side-effects">Headache</button>
+        <button class="seg-btn" data-group="side-effects">Dry mouth</button>
+        <button class="seg-btn" data-group="side-effects">Irritability</button>
+        <button class="seg-btn" data-group="side-effects">Heart racing</button>
+        <button class="seg-btn" data-group="side-effects">None today</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Notes (optional)</div>
+      <textarea class="form-textarea" id="log-notes" placeholder="Anything else — medication timing, context, how the day went…"></textarea>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btn-save-log">Save Observation</button>
+    <div style="height:8px"></div>
+  </div>
+</main>
+
+<!-- FOOD -->
+<main id="page-food" class="page page-offset">
+  <h1 class="page-title">Food Guide</h1>
+  <p class="page-subtitle">Foods that support focus, mood, and ADHD medication.</p>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="search" id="food-search" class="search-input" placeholder="Search foods…" />
+  </div>
+  <div class="filter-tabs" id="food-filter-tabs"></div>
+  <div class="card" style="padding:8px 16px">
+    <div id="food-list"></div>
+  </div>
+  <button class="btn btn-ghost btn-full" id="btn-add-food" style="margin-top:8px">+ Add My Own Food</button>
+</main>
+
+<!-- HABITS -->
+<main id="page-habits" class="page page-offset">
+  <h1 class="page-title">Daily Habits</h1>
+  <p class="page-subtitle">Small consistent actions make a big difference.</p>
+  <div class="card" style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <span class="card-title" style="margin-bottom:0">Today's Progress</span>
+      <span id="habits-summary" style="font-size:0.8rem;color:var(--text-muted)"></span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="habits-progress-bar" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="card" style="padding:8px 16px">
+    <div id="habits-list"></div>
+  </div>
+  <button class="btn btn-ghost btn-full" id="btn-add-habit" style="margin-top:8px">+ Add Custom Habit</button>
+</main>
+
+<!-- QUOTES -->
+<main id="page-quotes" class="page page-offset">
+  <h1 class="page-title">Quotes</h1>
+  <p class="page-subtitle">Words from characters who inspire you.</p>
+  <div id="quotes-list"></div>
+  <button class="btn btn-ghost btn-full" id="btn-add-quote" style="margin-top:4px">+ Add a Quote</button>
+</main>
+
+<!-- HISTORY -->
+<main id="page-history" class="page page-offset">
+  <h1 class="page-title">History</h1>
+  <p class="page-subtitle">Your past medication observations.</p>
+  <div id="history-list"></div>
+</main>
+
+<!-- ══ Modals ══ -->
+
+<!-- Add Food -->
+<div class="modal-overlay" id="modal-add-food">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add My Own Food</div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input type="text" id="new-food-emoji" class="form-input" placeholder="🍽️" maxlength="4" style="max-width:80px" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Food Name *</label>
+      <input type="text" id="new-food-name" class="form-input" placeholder="e.g. Greek Yogurt" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes / Why it helps</label>
+      <textarea id="new-food-desc" class="form-textarea" placeholder="e.g. High protein, keeps me full without appetite loss"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tags (comma-separated)</label>
+      <input type="text" id="new-food-tags" class="form-input" placeholder="e.g. Protein, Breakfast, Snack" />
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" id="btn-cancel-food" style="flex:1">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-food" style="flex:1">Save Food</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Habit -->
+<div class="modal-overlay" id="modal-add-habit">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add Custom Habit</div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input type="text" id="new-habit-emoji" class="form-input" placeholder="⭐" maxlength="4" style="max-width:80px" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Habit Name *</label>
+      <input type="text" id="new-habit-name" class="form-input" placeholder="e.g. Read for 20 minutes" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <input type="text" id="new-habit-desc" class="form-input" placeholder="e.g. Any non-screen reading counts" />
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" id="btn-cancel-habit" style="flex:1">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-habit" style="flex:1">Save Habit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Quote -->
+<div class="modal-overlay" id="modal-add-quote">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add a Quote</div>
+    <div class="form-group">
+      <label class="form-label">Quote *</label>
+      <textarea id="new-quote-text" class="form-textarea" placeholder="Paste the exact quote here…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Character *</label>
+      <input type="text" id="new-quote-char" class="form-input" placeholder="e.g. Phainon" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Source</label>
+      <input type="text" id="new-quote-source" class="form-input" placeholder="e.g. Honkai: Star Rail" />
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" id="btn-cancel-quote" style="flex:1">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-quote" style="flex:1">Save Quote</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
