@@ -7,10 +7,10 @@
   --border: #e2e2de;
   --text: #1e1e1c;
   --text-muted: #7a7a74;
-  --accent: #5a8a6a;
-  --accent-light: #e8f2ec;
-  --accent-dark: #3d6b50;
-  --accent-2: #8ab89a;
+  --accent: #8CAE68;
+  --accent-light: #eaf3df;
+  --accent-dark: #172815;
+  --accent-2: #aac88a;
   --warn: #c0754a;
   --warn-light: #fdf0e8;
   --radius: 14px;
@@ -59,7 +59,7 @@ body {
   position: fixed;
   top: var(--header-height);
   left: 0; right: 0;
-  background: linear-gradient(135deg, #3d6b50 0%, #5a8a6a 100%);
+  background: linear-gradient(135deg, #172815 0%, #8CAE68 100%);
   color: #fff;
   padding: 10px 40px 10px 16px;
   z-index: 190;
