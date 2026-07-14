@@ -97,17 +97,16 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
 });
 
 // Auth state listener — single source of truth
-sb.auth.onAuthStateChange(async (event, session) => {
+sb.auth.onAuthStateChange((event, session) => {
   if (session?.user) {
     currentUser = session.user;
-    showLoadingScreen();
-    try {
-      await loadAllData();
-    } catch (e) {
-      console.error('loadAllData failed:', e);
-    }
-    hideLoadingScreen();
-    showApp();
+    showApp(); // show immediately, data loads in background
+    loadAllData()
+      .then(() => {
+        const active = document.querySelector('.tab-btn.active')?.dataset.page || 'page-log';
+        navigate(active);
+      })
+      .catch(e => console.error('loadAllData failed:', e));
   } else {
     currentUser = null;
     state = { logs: [], habitLog: {}, customHabits: [], customFoods: [], favFoods: [], customQuotes: [], books: [] };
