@@ -102,7 +102,7 @@ function hideLoadingScreen() {
 
 function showApp() {
   document.getElementById('login-page').classList.add('hidden');
-  document.querySelectorAll('.app-header, .tab-bar').forEach(el => el.style.display = '');
+  document.querySelectorAll('.app-header, .quote-bar, .tab-bar').forEach(el => el.style.display = '');
   initQuoteBar();
   navigate('page-log');
 }
