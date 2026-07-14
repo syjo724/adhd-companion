@@ -101,7 +101,11 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
     currentUser = session.user;
     showLoadingScreen();
-    await loadAllData();
+    try {
+      await loadAllData();
+    } catch (e) {
+      console.error('loadAllData failed:', e);
+    }
     hideLoadingScreen();
     showApp();
   } else {
