@@ -88,7 +88,6 @@ sb.auth.onAuthStateChange(async (event, session) => {
 function showLoginPage() {
   document.getElementById('login-page').classList.remove('hidden');
   document.getElementById('app-loading').classList.add('hidden');
-  document.querySelectorAll('.app-header, .quote-bar, .tab-bar, .page, .toast').forEach(el => el.style.display = 'none');
 }
 
 function showLoadingScreen() {
@@ -102,7 +101,6 @@ function hideLoadingScreen() {
 
 function showApp() {
   document.getElementById('login-page').classList.add('hidden');
-  document.querySelectorAll('.app-header, .quote-bar, .tab-bar').forEach(el => el.style.display = '');
   initQuoteBar();
   navigate('page-log');
 }
@@ -718,5 +716,4 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('load', updatePageOffset);
 window.addEventListener('resize', updatePageOffset);
 
-// Hide app shell until auth resolves
-showLoginPage();
+// Auth resolves async; login page starts visible (no hidden class in HTML)

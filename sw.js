@@ -1,4 +1,4 @@
-const CACHE_NAME = 'adhd-companion-v2';
+const CACHE_NAME = 'adhd-companion-v3';
 
 // Works for both local (/) and GitHub Pages (/adhd-companion/)
 const BASE = self.location.pathname.replace('/sw.js', '');
