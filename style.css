@@ -590,13 +590,43 @@ input[type=range]::-webkit-slider-thumb {
   max-width: 360px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
+.login-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.login-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+}
 .login-logo {
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
-  margin-bottom: 6px;
+}
+.login-quote-wrap {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+.login-quote-text {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+.login-quote-attr {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
 }
 .login-title {
   font-size: 1.5rem;
