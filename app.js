@@ -10,6 +10,7 @@ const sb = supabase.createClient(
 // APP STATE (in-memory cache, loaded on login)
 // ════════════════════════════════════════════
 let currentUser = null;
+let signedOut = false;
 let state = {
   logs: [], habitLog: {}, customHabits: [], customFoods: [],
   favFoods: [], customQuotes: [], books: []
@@ -41,6 +42,7 @@ document.getElementById('btn-signin').addEventListener('click', async () => {
   if (!email || !password) { showSigninError('Please enter your email and password.'); return; }
   const btn = document.getElementById('btn-signin');
   btn.textContent = '…'; btn.disabled = true;
+  signedOut = false;
   const { error } = await sb.auth.signInWithPassword({ email, password });
   btn.textContent = 'Sign In'; btn.disabled = false;
   if (error) showSigninError('Incorrect email/password combination.');
@@ -94,6 +96,7 @@ function showSignupSuccess(msg) {
 document.getElementById('btn-logout').addEventListener('click', async () => {
   const btn = document.getElementById('btn-logout');
   btn.textContent = 'Signing out…'; btn.disabled = true;
+  signedOut = true;
   await sb.auth.signOut();
   btn.textContent = 'Sign out'; btn.disabled = false;
   currentUser = null;
@@ -104,7 +107,7 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
 
 // Auth state listener — single source of truth
 sb.auth.onAuthStateChange((event, session) => {
-  if (session?.user) {
+  if (session?.user && !signedOut) {
     currentUser = session.user;
     showApp();
     loadAllData()
