@@ -92,15 +92,17 @@ function showSignupSuccess(msg) {
 }
 
 document.getElementById('btn-logout').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-logout');
+  btn.textContent = 'Signing out…'; btn.disabled = true;
   await sb.auth.signOut();
-  // onAuthStateChange handles the redirect
+  btn.textContent = 'Sign out'; btn.disabled = false;
 });
 
 // Auth state listener — single source of truth
 sb.auth.onAuthStateChange((event, session) => {
   if (session?.user) {
     currentUser = session.user;
-    showApp(); // show immediately, data loads in background
+    showApp();
     loadAllData()
       .then(() => {
         const active = document.querySelector('.tab-btn.active')?.dataset.page || 'page-log';
@@ -110,6 +112,9 @@ sb.auth.onAuthStateChange((event, session) => {
   } else {
     currentUser = null;
     state = { logs: [], habitLog: {}, customHabits: [], customFoods: [], favFoods: [], customQuotes: [], books: [] };
+    if (event === 'SIGNED_OUT') {
+      document.getElementById('card-signin').querySelector('.login-title').textContent = 'Return Again';
+    }
     showLoginPage();
   }
 });
