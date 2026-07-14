@@ -50,8 +50,12 @@ document.getElementById('btn-auth-submit').addEventListener('click', async () =>
 
   if (result.error) {
     showAuthError(result.error.message);
+  } else if (authMode === 'signup') {
+    // Email confirmation required — show instructions
+    document.getElementById('auth-error').style.display = 'none';
+    showAuthSuccess('Account created! Check your email for a confirmation link, then come back and sign in.');
   }
-  // onAuthStateChange handles the rest
+  // onAuthStateChange handles sign-in
 });
 
 // Allow Enter key on password field
@@ -62,6 +66,14 @@ document.getElementById('auth-password').addEventListener('keydown', e => {
 function showAuthError(msg) {
   const el = document.getElementById('auth-error');
   el.textContent = msg;
+  el.className = 'login-error';
+  el.style.display = 'block';
+}
+
+function showAuthSuccess(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.className = 'login-success';
   el.style.display = 'block';
 }
 

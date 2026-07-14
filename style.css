@@ -647,6 +647,16 @@ input[type=range]::-webkit-slider-thumb {
   background: var(--warn-light);
   border-radius: var(--radius-sm);
 }
+.login-success {
+  font-size: 0.82rem;
+  color: var(--accent-dark);
+  margin-bottom: 12px;
+  display: none;
+  padding: 8px 12px;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  line-height: 1.5;
+}
 
 /* ══ Logout button in header ══ */
 .btn-logout {
