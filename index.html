@@ -13,9 +13,36 @@
 </head>
 <body>
 
+<!-- ══ Login Page ══ -->
+<div id="login-page" class="login-page">
+  <div class="login-card">
+    <div class="login-logo">Anrei's ADHD Journey</div>
+    <h1 class="login-title" id="login-title">Welcome back</h1>
+    <p class="login-subtitle" id="login-subtitle">Sign in to access your journey.</p>
+    <div id="auth-error" class="login-error"></div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" id="auth-email" class="form-input" placeholder="you@email.com" autocomplete="email" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" id="auth-password" class="form-input" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary btn-full" id="btn-auth-submit">Sign In</button>
+    <button class="btn btn-ghost btn-full" id="btn-auth-toggle" style="margin-top:8px">No account? Sign up</button>
+  </div>
+</div>
+
+<!-- ══ Loading Screen ══ -->
+<div id="app-loading" class="app-loading hidden">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading your journey…</div>
+</div>
+
 <!-- ══ App Header ══ -->
 <header class="app-header">
   <div class="app-title">Anrei's <span>ADHD Journey</span></div>
+  <button class="btn-logout" id="btn-logout">Sign out</button>
 </header>
 
 <!-- ══ Daily Quote Bar ══ -->
@@ -345,6 +372,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="https://unpkg.com/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
