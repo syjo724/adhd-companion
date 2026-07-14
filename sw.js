@@ -1,10 +1,13 @@
-const CACHE_NAME = 'adhd-companion-v1';
+const CACHE_NAME = 'adhd-companion-v2';
+
+// Works for both local (/) and GitHub Pages (/adhd-companion/)
+const BASE = self.location.pathname.replace('/sw.js', '');
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/data.js'
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/style.css',
+  BASE + '/app.js',
+  BASE + '/data.js'
 ];
 
 self.addEventListener('install', e => {
