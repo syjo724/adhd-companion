@@ -24,6 +24,8 @@ document.getElementById('btn-go-signup').addEventListener('click', () => {
   document.getElementById('card-signin').style.display = 'none';
   document.getElementById('card-signup').style.display = 'block';
   document.getElementById('signup-error').style.display = 'none';
+  document.getElementById('btn-signup').style.display = '';
+  document.getElementById('btn-go-signin').textContent = 'Cancel';
 });
 
 document.getElementById('btn-go-signin').addEventListener('click', () => {
@@ -65,6 +67,8 @@ document.getElementById('btn-signup').addEventListener('click', async () => {
     showSignupError(error.message);
   } else {
     showSignupSuccess('Account created! Check your email for a confirmation link, then sign in.');
+    btn.style.display = 'none';
+    document.getElementById('btn-go-signin').textContent = 'Go to Sign In';
   }
 });
 
