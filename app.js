@@ -23,7 +23,7 @@ let authMode = 'signin'; // 'signin' | 'signup'
 document.getElementById('btn-auth-toggle').addEventListener('click', () => {
   authMode = authMode === 'signin' ? 'signup' : 'signin';
   document.getElementById('login-title').textContent = authMode === 'signin' ? 'Welcome back' : 'Create account';
-  document.getElementById('login-subtitle').textContent = authMode === 'signin' ? 'Sign in to access your journey.' : 'Set up your personal ADHD companion.';
+  document.getElementById('login-subtitle').textContent = authMode === 'signin' ? 'Sign in to access your journey.' : 'Set up your A\'s Journey.';
   document.getElementById('btn-auth-submit').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
   document.getElementById('btn-auth-toggle').textContent = authMode === 'signin' ? 'No account? Sign up' : 'Have an account? Sign in';
   document.getElementById('auth-error').style.display = 'none';

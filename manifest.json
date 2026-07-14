@@ -1,6 +1,6 @@
 {
-  "name": "ADHD Companion",
-  "short_name": "ADHD",
+  "name": "A's Journey",
+  "short_name": "A's Journey",
   "description": "Track medication observations, food, and lifestyle habits",
   "start_url": "/adhd-companion/",
   "scope": "/adhd-companion/",
