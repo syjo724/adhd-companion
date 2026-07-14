@@ -152,11 +152,12 @@ function showApp() {
   document.getElementById('login-page').style.display = 'none';
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  // Wait one frame so the browser calculates layout before measuring heights
   requestAnimationFrame(() => {
     initQuoteBar();
     navigate('page-log');
     updatePageOffset();
+    setTimeout(updatePageOffset, 150);
+    setTimeout(updatePageOffset, 500);
   });
 }
 
