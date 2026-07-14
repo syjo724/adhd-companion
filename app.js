@@ -89,10 +89,6 @@ function showLoginPage() {
   document.getElementById('login-page').style.display = 'flex';
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app').style.display = 'none';
-  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-  const q = CHARACTER_QUOTES[dayOfYear % CHARACTER_QUOTES.length];
-  document.getElementById('login-quote-text').textContent = `"${q.text}"`;
-  document.getElementById('login-quote-attr').textContent = `— ${q.character}, ${q.source}`;
 }
 
 function showLoadingScreen() {
@@ -728,5 +724,10 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('load', updatePageOffset);
 window.addEventListener('resize', updatePageOffset);
 
-// Show login page with today's quote while auth resolves
-showLoginPage();
+// Populate login quote (data.js already loaded at this point)
+(function() {
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const q = CHARACTER_QUOTES[dayOfYear % CHARACTER_QUOTES.length];
+  document.getElementById('login-quote-text').textContent = `"${q.text}"`;
+  document.getElementById('login-quote-attr').textContent = `— ${q.character}, ${q.source}`;
+})();
