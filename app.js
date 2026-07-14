@@ -18,63 +18,73 @@ let state = {
 // ════════════════════════════════════════════
 // AUTH
 // ════════════════════════════════════════════
-let authMode = 'signin'; // 'signin' | 'signup'
 
-document.getElementById('btn-auth-toggle').addEventListener('click', () => {
-  authMode = authMode === 'signin' ? 'signup' : 'signin';
-  document.getElementById('login-title').textContent = authMode === 'signin' ? 'Welcome back' : 'Create account';
-  document.getElementById('login-subtitle').textContent = authMode === 'signin' ? 'Sign in to go on a journey.' : 'Set up your A\'s Journey.';
-  document.getElementById('btn-auth-submit').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
-  document.getElementById('btn-auth-toggle').textContent = authMode === 'signin' ? 'No account? Sign up' : 'Have an account? Sign in';
-  document.getElementById('auth-error').style.display = 'none';
+// Navigate between sign-in and sign-up cards
+document.getElementById('btn-go-signup').addEventListener('click', () => {
+  document.getElementById('card-signin').style.display = 'none';
+  document.getElementById('card-signup').style.display = 'block';
+  document.getElementById('signup-error').style.display = 'none';
 });
 
-document.getElementById('btn-auth-submit').addEventListener('click', async () => {
-  const email = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.style.display = 'none';
-  if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
-  document.getElementById('btn-auth-submit').textContent = '…';
-  document.getElementById('btn-auth-submit').disabled = true;
+document.getElementById('btn-go-signin').addEventListener('click', () => {
+  document.getElementById('card-signup').style.display = 'none';
+  document.getElementById('card-signin').style.display = 'block';
+  document.getElementById('signin-error').style.display = 'none';
+});
 
-  let result;
-  if (authMode === 'signin') {
-    result = await sb.auth.signInWithPassword({ email, password });
+// Sign In
+document.getElementById('btn-signin').addEventListener('click', async () => {
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value;
+  if (!email || !password) { showSigninError('Please enter your email and password.'); return; }
+  const btn = document.getElementById('btn-signin');
+  btn.textContent = '…'; btn.disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.textContent = 'Sign In'; btn.disabled = false;
+  if (error) showSigninError('Incorrect email/password combination.');
+  // onAuthStateChange handles success
+});
+
+document.getElementById('signin-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-signin').click();
+});
+
+// Sign Up
+document.getElementById('btn-signup').addEventListener('click', async () => {
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const confirm = document.getElementById('signup-confirm').value;
+  if (!email || !password) { showSignupError('Please fill in all fields.'); return; }
+  if (password !== confirm) { showSignupError('Passwords do not match.'); return; }
+  if (password.length < 6) { showSignupError('Password must be at least 6 characters.'); return; }
+  const btn = document.getElementById('btn-signup');
+  btn.textContent = '…'; btn.disabled = true;
+  const { error } = await sb.auth.signUp({ email, password });
+  btn.textContent = 'Sign Up'; btn.disabled = false;
+  if (error) {
+    showSignupError(error.message);
   } else {
-    result = await sb.auth.signUp({ email, password });
+    showSignupSuccess('Account created! Check your email for a confirmation link, then sign in.');
   }
-
-  document.getElementById('btn-auth-submit').disabled = false;
-  document.getElementById('btn-auth-submit').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
-
-  if (result.error) {
-    showAuthError(result.error.message);
-  } else if (authMode === 'signup') {
-    // Email confirmation required — show instructions
-    document.getElementById('auth-error').style.display = 'none';
-    showAuthSuccess('Account created! Check your email for a confirmation link, then come back and sign in.');
-  }
-  // onAuthStateChange handles sign-in
 });
 
-// Allow Enter key on password field
-document.getElementById('auth-password').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('btn-auth-submit').click();
+document.getElementById('signup-confirm').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-signup').click();
 });
 
-function showAuthError(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.className = 'login-error';
-  el.style.display = 'block';
+function showSigninError(msg) {
+  const el = document.getElementById('signin-error');
+  el.textContent = msg; el.className = 'login-error'; el.style.display = 'block';
 }
 
-function showAuthSuccess(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.className = 'login-success';
-  el.style.display = 'block';
+function showSignupError(msg) {
+  const el = document.getElementById('signup-error');
+  el.textContent = msg; el.className = 'login-error'; el.style.display = 'block';
+}
+
+function showSignupSuccess(msg) {
+  const el = document.getElementById('signup-error');
+  el.textContent = msg; el.className = 'login-success'; el.style.display = 'block';
 }
 
 document.getElementById('btn-logout').addEventListener('click', async () => {
