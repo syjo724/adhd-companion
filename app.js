@@ -153,11 +153,11 @@ function showApp() {
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   requestAnimationFrame(() => {
+    setupResizeObserver();
     initQuoteBar();
     navigate('page-log');
     updatePageOffset();
-    setTimeout(updatePageOffset, 150);
-    setTimeout(updatePageOffset, 500);
+    setTimeout(updatePageOffset, 300);
   });
 }
 
@@ -287,12 +287,23 @@ function updatePageOffset() {
   const bar = document.getElementById('quote-bar');
   const tabs = document.querySelector('.tab-bar');
   const headerH = header ? header.offsetHeight : 56;
-  const barH = bar && !bar.classList.contains('hidden') ? bar.offsetHeight : 0;
-  const tabsH = tabs ? tabs.offsetHeight : 48;
+  const barH = (bar && !bar.classList.contains('hidden')) ? bar.offsetHeight : 0;
+  const tabsH = tabs ? tabs.offsetHeight : 50;
+  if (headerH === 0) return; // not painted yet — ResizeObserver will retry
+  document.documentElement.style.setProperty('--header-height', headerH + 'px');
   tabs.style.top = (headerH + barH) + 'px';
   document.querySelectorAll('.page-offset').forEach(p => {
     p.style.paddingTop = (headerH + barH + tabsH + 12) + 'px';
   });
+}
+
+function setupResizeObserver() {
+  if (!window.ResizeObserver) return;
+  const ro = new ResizeObserver(() => updatePageOffset());
+  const header = document.querySelector('.app-header');
+  const bar = document.getElementById('quote-bar');
+  if (header) ro.observe(header);
+  if (bar) ro.observe(bar);
 }
 
 document.getElementById('quote-dismiss').addEventListener('click', () => {
