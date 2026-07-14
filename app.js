@@ -86,21 +86,25 @@ sb.auth.onAuthStateChange(async (event, session) => {
 });
 
 function showLoginPage() {
-  document.getElementById('login-page').classList.remove('hidden');
-  document.getElementById('app-loading').classList.add('hidden');
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('app-loading').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
 }
 
 function showLoadingScreen() {
-  document.getElementById('login-page').classList.add('hidden');
-  document.getElementById('app-loading').classList.remove('hidden');
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app-loading').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
 }
 
 function hideLoadingScreen() {
-  document.getElementById('app-loading').classList.add('hidden');
+  document.getElementById('app-loading').style.display = 'none';
 }
 
 function showApp() {
-  document.getElementById('login-page').classList.add('hidden');
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app-loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
   initQuoteBar();
   navigate('page-log');
 }
