@@ -483,6 +483,92 @@ input[type=range]::-webkit-slider-thumb {
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ══ Books ══ */
+.books-series-group { margin-bottom: 20px; }
+.series-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.series-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.series-count {
+  font-size: 0.72rem;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.book-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.book-spine {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 2px;
+  flex-shrink: 0;
+  min-height: 40px;
+}
+.book-spine.to-read  { background: var(--border); }
+.book-spine.reading  { background: #d4a94a; }
+.book-spine.finished { background: var(--accent); }
+
+.book-body { flex: 1; min-width: 0; }
+.book-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+.book-author { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
+.book-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+.book-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.book-status.to-read  { background: var(--surface-alt); color: var(--text-muted); }
+.book-status.reading  { background: #fdf5e0; color: #a07820; }
+.book-status.finished { background: var(--accent-light); color: var(--accent-dark); }
+.book-stars { color: #d4a94a; font-size: 0.85rem; letter-spacing: 1px; }
+.book-date { font-size: 0.72rem; color: var(--text-muted); }
+.book-notes { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-top: 4px; }
+.book-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.book-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+.book-action-btn:active { opacity: 1; }
+
+/* Star picker */
+.star-picker { display: flex; gap: 4px; }
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--border);
+  padding: 0 2px;
+  transition: color 0.1s;
+  line-height: 1;
+}
+.star-btn.active { color: #d4a94a; }
+
 /* ══ Progress Bar ══ */
 .progress-track {
   height: 8px;

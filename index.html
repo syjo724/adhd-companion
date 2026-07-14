@@ -54,6 +54,12 @@
     </svg>
     Quotes
   </button>
+  <button class="tab-btn" data-page="page-books">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    </svg>
+    Books
+  </button>
   <button class="tab-btn" data-page="page-history">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
@@ -185,6 +191,21 @@
   <button class="btn btn-ghost btn-full" id="btn-add-quote" style="margin-top:4px">+ Add a Quote</button>
 </main>
 
+<!-- BOOKS -->
+<main id="page-books" class="page page-offset">
+  <h1 class="page-title">Books</h1>
+  <p class="page-subtitle">Your reading list, tracked by shelf and series.</p>
+  <div class="filter-tabs" id="books-shelf-tabs"></div>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="search" id="books-search" class="search-input" placeholder="Search books or series…" />
+  </div>
+  <div id="books-list"></div>
+  <button class="btn btn-ghost btn-full" id="btn-add-book" style="margin-top:4px">+ Add a Book</button>
+</main>
+
 <!-- HISTORY -->
 <main id="page-history" class="page page-offset">
   <h1 class="page-title">History</h1>
@@ -266,6 +287,57 @@
     <div style="display:flex;gap:10px">
       <button class="btn btn-ghost" id="btn-cancel-quote" style="flex:1">Cancel</button>
       <button class="btn btn-primary" id="btn-save-quote" style="flex:1">Save Quote</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Book -->
+<div class="modal-overlay" id="modal-add-book">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-book-title">Add a Book</div>
+    <input type="hidden" id="edit-book-id" />
+    <div class="form-group">
+      <label class="form-label">Title *</label>
+      <input type="text" id="new-book-title" class="form-input" placeholder="e.g. The Way of Kings" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Author *</label>
+      <input type="text" id="new-book-author" class="form-input" placeholder="e.g. Brandon Sanderson" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Series</label>
+      <input type="text" id="new-book-series" class="form-input" placeholder="e.g. The Stormlight Archive" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Shelf</label>
+      <div class="segment" id="book-shelf-picker">
+        <button class="seg-btn active" data-shelf="to-read">To Read</button>
+        <button class="seg-btn" data-shelf="reading">Reading</button>
+        <button class="seg-btn" data-shelf="finished">Finished</button>
+      </div>
+    </div>
+    <div id="book-rating-group" class="form-group" style="display:none">
+      <label class="form-label">Rating</label>
+      <div class="star-picker" id="star-picker">
+        <button class="star-btn" data-val="1">★</button>
+        <button class="star-btn" data-val="2">★</button>
+        <button class="star-btn" data-val="3">★</button>
+        <button class="star-btn" data-val="4">★</button>
+        <button class="star-btn" data-val="5">★</button>
+      </div>
+    </div>
+    <div id="book-date-group" class="form-group" style="display:none">
+      <label class="form-label">Date Finished</label>
+      <input type="date" id="new-book-date" class="form-input" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes / Review</label>
+      <textarea id="new-book-notes" class="form-textarea" placeholder="Your thoughts…"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" id="btn-cancel-book" style="flex:1">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-book" style="flex:1">Save Book</button>
     </div>
   </div>
 </div>

@@ -356,6 +356,173 @@ document.getElementById('btn-save-quote').addEventListener('click', () => {
 });
 
 // ══════════════════════════════════════════
+// BOOKS PAGE
+// ══════════════════════════════════════════
+let booksShelf = 'all', booksSearch = '';
+
+function getBooks() { return DB.get('books', []); }
+function saveBooks(b) { DB.set('books', b); }
+
+function renderBooksPage() {
+  const books = getBooks();
+  const shelves = ['all', 'reading', 'to-read', 'finished'];
+  const labels = { all: 'All', reading: 'Reading', 'to-read': 'To Read', finished: 'Finished' };
+  const counts = { all: books.length, reading: 0, 'to-read': 0, finished: 0 };
+  books.forEach(b => counts[b.shelf]++);
+
+  document.getElementById('books-shelf-tabs').innerHTML = shelves.map(s =>
+    `<button class="filter-tab${s === booksShelf ? ' active' : ''}" onclick="setBooksShelf('${s}')">${labels[s]} <span style="opacity:0.6;font-size:0.75em">${counts[s]}</span></button>`
+  ).join('');
+
+  const filtered = books.filter(b => {
+    const matchShelf = booksShelf === 'all' || b.shelf === booksShelf;
+    const q = booksSearch.toLowerCase();
+    const matchSearch = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || (b.series || '').toLowerCase().includes(q);
+    return matchShelf && matchSearch;
+  });
+
+  const el = document.getElementById('books-list');
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><p>No books here yet.<br>Add one below!</p></div>`;
+    return;
+  }
+
+  // Group by series (books without a series each get their own group keyed by id)
+  const groups = {};
+  filtered.forEach(b => {
+    const key = b.series || ('__solo__' + b.id);
+    if (!groups[key]) groups[key] = { name: b.series || null, books: [] };
+    groups[key].books.push(b);
+  });
+
+  el.innerHTML = Object.values(groups).map(g => `
+    <div class="books-series-group">
+      ${g.name ? `<div class="series-header"><span class="series-name">${g.name}</span><span class="series-count">${g.books.length} book${g.books.length > 1 ? 's' : ''}</span></div>` : ''}
+      ${g.books.map(b => bookItemHTML(b)).join('')}
+    </div>`).join('');
+}
+
+function bookItemHTML(b) {
+  const stars = b.rating ? '★'.repeat(b.rating) + '☆'.repeat(5 - b.rating) : '';
+  const statusLabel = { 'to-read': 'To Read', reading: 'Reading', finished: 'Finished' }[b.shelf];
+  return `
+  <div class="book-item">
+    <div class="book-spine ${b.shelf}"></div>
+    <div class="book-body">
+      <div class="book-title">${b.title}</div>
+      <div class="book-author">${b.author}</div>
+      <div class="book-meta">
+        <span class="book-status ${b.shelf}">${statusLabel}</span>
+        ${stars ? `<span class="book-stars">${stars}</span>` : ''}
+        ${b.dateFinished ? `<span class="book-date">Finished ${formatDate(b.dateFinished)}</span>` : ''}
+      </div>
+      ${b.notes ? `<div class="book-notes">${b.notes}</div>` : ''}
+    </div>
+    <div class="book-actions">
+      <button class="book-action-btn" onclick="editBook('${b.id}')" title="Edit">✏️</button>
+      <button class="book-action-btn" onclick="deleteBook('${b.id}')" title="Delete">🗑</button>
+    </div>
+  </div>`;
+}
+
+function setBooksShelf(s) { booksShelf = s; renderBooksPage(); }
+
+document.getElementById('books-search').addEventListener('input', e => {
+  booksSearch = e.target.value.toLowerCase();
+  renderBooksPage();
+});
+
+// Shelf picker in modal
+document.querySelectorAll('#book-shelf-picker .seg-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#book-shelf-picker .seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const shelf = btn.dataset.shelf;
+    document.getElementById('book-rating-group').style.display = shelf === 'finished' ? 'block' : 'none';
+    document.getElementById('book-date-group').style.display = shelf === 'finished' ? 'block' : 'none';
+  });
+});
+
+// Star picker
+let selectedRating = 0;
+document.querySelectorAll('.star-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedRating = parseInt(btn.dataset.val);
+    document.querySelectorAll('.star-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.val) <= selectedRating);
+    });
+  });
+});
+
+function resetBookModal() {
+  document.getElementById('modal-book-title').textContent = 'Add a Book';
+  document.getElementById('edit-book-id').value = '';
+  ['new-book-title','new-book-author','new-book-series','new-book-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('new-book-date').value = '';
+  document.querySelectorAll('#book-shelf-picker .seg-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+  document.getElementById('book-rating-group').style.display = 'none';
+  document.getElementById('book-date-group').style.display = 'none';
+  selectedRating = 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+}
+
+function editBook(id) {
+  const book = getBooks().find(b => b.id === id);
+  if (!book) return;
+  document.getElementById('modal-book-title').textContent = 'Edit Book';
+  document.getElementById('edit-book-id').value = id;
+  document.getElementById('new-book-title').value = book.title;
+  document.getElementById('new-book-author').value = book.author;
+  document.getElementById('new-book-series').value = book.series || '';
+  document.getElementById('new-book-notes').value = book.notes || '';
+  document.getElementById('new-book-date').value = book.dateFinished || '';
+  document.querySelectorAll('#book-shelf-picker .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.shelf === book.shelf));
+  const isFinished = book.shelf === 'finished';
+  document.getElementById('book-rating-group').style.display = isFinished ? 'block' : 'none';
+  document.getElementById('book-date-group').style.display = isFinished ? 'block' : 'none';
+  selectedRating = book.rating || 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.val) <= selectedRating));
+  openModal('modal-add-book');
+}
+
+function deleteBook(id) {
+  saveBooks(getBooks().filter(b => b.id !== id));
+  renderBooksPage();
+  showToast('Book removed');
+}
+
+document.getElementById('btn-add-book').addEventListener('click', () => { resetBookModal(); openModal('modal-add-book'); });
+document.getElementById('btn-cancel-book').addEventListener('click', () => closeModal('modal-add-book'));
+document.getElementById('btn-save-book').addEventListener('click', () => {
+  const title = document.getElementById('new-book-title').value.trim();
+  const author = document.getElementById('new-book-author').value.trim();
+  if (!title || !author) { showToast('Title and author are required'); return; }
+  const shelf = document.querySelector('#book-shelf-picker .seg-btn.active')?.dataset.shelf || 'to-read';
+  const editId = document.getElementById('edit-book-id').value;
+  const book = {
+    id: editId || 'b' + Date.now(),
+    title,
+    author,
+    series: document.getElementById('new-book-series').value.trim(),
+    shelf,
+    rating: shelf === 'finished' ? selectedRating : 0,
+    dateFinished: shelf === 'finished' ? document.getElementById('new-book-date').value : '',
+    notes: document.getElementById('new-book-notes').value.trim()
+  };
+  const books = getBooks();
+  if (editId) {
+    const idx = books.findIndex(b => b.id === editId);
+    if (idx > -1) books[idx] = book;
+  } else {
+    books.unshift(book);
+  }
+  saveBooks(books);
+  closeModal('modal-add-book');
+  showToast(editId ? 'Book updated ✓' : 'Book added ✓');
+  renderBooksPage();
+});
+
+// ══════════════════════════════════════════
 // HISTORY PAGE
 // ══════════════════════════════════════════
 function renderHistoryPage() {
