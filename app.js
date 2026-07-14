@@ -96,6 +96,10 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   btn.textContent = 'Signing out…'; btn.disabled = true;
   await sb.auth.signOut();
   btn.textContent = 'Sign out'; btn.disabled = false;
+  currentUser = null;
+  state = { logs: [], habitLog: {}, customHabits: [], customFoods: [], favFoods: [], customQuotes: [], books: [] };
+  document.getElementById('card-signin').querySelector('.login-title').textContent = 'Return Again';
+  showLoginPage();
 });
 
 // Auth state listener — single source of truth
