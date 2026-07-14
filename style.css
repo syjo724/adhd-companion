@@ -95,6 +95,7 @@ body {
 /* ══ Tab Bar ══ */
 .tab-bar {
   position: fixed;
+  top: var(--header-height); /* default — JS overrides when quote bar is visible */
   left: 0; right: 0;
   height: var(--tabs-height);
   background: var(--surface);
