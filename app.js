@@ -198,9 +198,7 @@ async function loadAllData() {
 // DATA WRITE HELPERS
 // ════════════════════════════════════════════
 async function dbSaveLog(log) {
-  state.logs = state.logs.filter(l => l.date !== log.date);
   state.logs.unshift(log);
-  await sb.from('logs').delete().eq('user_id', currentUser.id).eq('date', log.date);
   await sb.from('logs').insert({ ...log, user_id: currentUser.id });
 }
 
@@ -356,38 +354,32 @@ function renderLogPage() {
   document.getElementById('log-banner-date').textContent =
     new Date().toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
 
-  const todayLog = state.logs.find(l => l.date === todayKey());
-  if (todayLog) {
-    document.getElementById('log-already-done').style.display = 'block';
-    document.getElementById('log-form-wrap').style.display = 'none';
-    renderTodayReview(todayLog);
-  } else {
-    document.getElementById('log-already-done').style.display = 'none';
-    document.getElementById('log-form-wrap').style.display = 'block';
-  }
-}
+  const todayLogs = state.logs.filter(l => l.date === todayKey()).sort((a, b) => a.ts - b.ts);
+  const reviewEl = document.getElementById('today-review');
+  const alreadyDone = document.getElementById('log-already-done');
 
-function renderTodayReview(log) {
-  document.getElementById('today-review').innerHTML = `
-    <div class="log-metrics">
-      ${metricChip('😊', 'Mood', log.mood)}
-      ${metricChip('🎯', 'Focus', log.focus)}
-      ${metricChip('⚡', 'Energy', log.energy)}
-    </div>
-    ${log.side_effects?.length ? `<div style="margin-bottom:8px">${log.side_effects.map(s => `<span class="tag tag-warn" style="margin-right:4px;margin-bottom:4px">${s}</span>`).join('')}</div>` : ''}
-    ${log.notes ? `<p class="log-notes">${log.notes}</p>` : ''}
-    <button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="editTodayLog()">Edit today's log</button>
-  `;
+  if (todayLogs.length) {
+    alreadyDone.style.display = 'block';
+    reviewEl.innerHTML = todayLogs.map(log => `
+      <div class="log-entry-today">
+        <div class="log-entry-period">${log.period}</div>
+        <div class="log-metrics">
+          ${metricChip('😊', 'Mood', log.mood)}
+          ${metricChip('🎯', 'Focus', log.focus)}
+          ${metricChip('⚡', 'Energy', log.energy)}
+        </div>
+        ${log.side_effects?.length ? `<div style="margin-bottom:4px">${log.side_effects.map(s => `<span class="tag tag-warn" style="margin-right:4px">${s}</span>`).join('')}</div>` : ''}
+        ${log.notes ? `<p class="log-notes">${log.notes}</p>` : ''}
+      </div>`).join('');
+  } else {
+    alreadyDone.style.display = 'none';
+  }
+
+  document.getElementById('log-form-wrap').style.display = 'block';
 }
 
 function metricChip(icon, label, val) {
   return `<div class="metric-chip"><span>${icon}</span><span>${label}: <strong>${val}/10</strong></span><span class="dot" style="background:${scaleColor(val)}"></span></div>`;
-}
-
-function editTodayLog() {
-  state.logs = state.logs.filter(l => l.date !== todayKey());
-  sb.from('logs').delete().eq('user_id', currentUser.id).eq('date', todayKey());
-  renderLogPage();
 }
 
 document.querySelectorAll('.scale-range').forEach(input => {
@@ -414,7 +406,7 @@ document.getElementById('btn-save-log').addEventListener('click', async () => {
   const notes = document.getElementById('log-notes').value.trim();
   const period = document.querySelector('.seg-btn[data-group="period"].active')?.dataset.val || 'Morning';
 
-  const log = { date: todayKey(), period, mood, focus, energy, side_effects, notes, ts: Date.now() };
+  const log = { id: 'log-' + Date.now(), date: todayKey(), period, mood, focus, energy, side_effects, notes, ts: Date.now() };
   await dbSaveLog(log);
 
   document.getElementById('scale-mood').value = 5; document.getElementById('scale-mood-val').textContent = '5';

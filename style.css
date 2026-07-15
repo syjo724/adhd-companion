@@ -384,6 +384,21 @@ input[type=range]::-webkit-slider-thumb {
 }
 .quote-delete:active { opacity: 1; color: var(--warn); }
 
+/* ══ Today's Entries (Log page) ══ */
+.log-entry-today {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.log-entry-today:last-child { border-bottom: none; padding-bottom: 0; }
+.log-entry-period {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
 /* ══ Log History ══ */
 .log-entry {
   background: var(--surface);
